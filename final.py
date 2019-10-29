@@ -19,4 +19,4 @@ def european_call_value(sigma, time_to_maturity, rf_rate, spot, strike):
 
 def european_put_value(sigma, time_to_maturity, rf_rate, spot, strike):
     call = european_call_value(sigma, time_to_maturity, rf_rate, spot, strike)
-    return call - spot + pv(1, rf_rate, time_to_maturity)
+    return call - spot + strike * pv(1, rf_rate, time_to_maturity)
