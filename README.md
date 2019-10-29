@@ -1,3 +1,3 @@
 # final
 
-Python library for financial computation.
+Some functions for financial computation.
