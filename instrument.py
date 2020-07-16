@@ -1,14 +1,10 @@
 import asyncio
 import operator
 import concurrent.futures as confu
-import collections.OrderedDict
+from collections import OrderedDict
 from datetime import date, datetime
 
-class StatusAttributeError(Exception):
-    def __init__(self, status, func, *args):
-        self.message = f'One or more missing or invalid values for {func} in {status}: {*args}'
-
-def to_datetime(obj, formats=['%Y%m%d']):
+def to_datetime(obj, formats=['%Y%m%d', '%Y-%m-%d', '%Y/%m/%d']):
     if type(obj) is datetime:
         return obj
 
@@ -24,8 +20,11 @@ def to_datetime(obj, formats=['%Y%m%d']):
         raise ValueError(
             f'String {obj} matches none of the formats in {formats}.'
         )
-    
-class FloorDict(collections.OrderedDict):
+    raise ValueError(
+        f'Unknown type {type(obj)}'
+    )
+
+class FloorDict(OrderedDict):
     def __get__(self, key):
         try:
             return super().__get__(self, key)
@@ -74,7 +73,7 @@ class Status:
                  mkt_cap=None, shares_outstanding=None,
                  price_adjust=None, shares_adjust=None):
 
-        self.time = time
+        self.time = to_datetime(time)
         self.volume = volume
         self.price, self.mkt_cap, self.shares_outstanding = calc_market_vals(
             price, mkt_cap, shares_outstanding
